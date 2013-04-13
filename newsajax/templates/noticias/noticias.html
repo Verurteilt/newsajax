@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+{%block title%}NewsAjax | Mis noticias{%endblock%}
+
+{%block content%}
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th><h3>Imagen</h3></th>
+			<th><h3>Titulo</h3></th>
+			<th><h3>Contenido</h3></th>
+			<th><h3>Autor</h3></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for n in noticias %}
+			<tr>
+				<td><img src="/media/{{ n.photo }}" width="200px" heigth="300px"/><br><br>
+</td>
+				<td><a href="{%url ver_noticias_alone n.id%}">{{n.titulo}}</a></td>
+				<td>{{n.contenido|truncatewords:15}}</td>
+				<td class="text-info">{{n.user}}</td>
+				{%if user == usuario%}
+				<td><a href="{%url editar_noticia n.id%}" class="btn">Editar</a>
+					<a href="{%url eliminar n.id%}" class="btn btn-danger">Eliminar</a></td>
+				{%endif%}
+			</tr>
+		{% empty %}
+			<tr>
+				<td colspan="4" class="text-error">NO HAY NOTICIAS</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<a href="{% url add %}" class="btn btn-primary">Agregar Noticias</a>
+
+
+	<div class="pagination">
+		<ul>
+			{%if noticias.has_previous%}
+				<li><a href="{%url ver_noticias user.id, noticias.previous_page_number%}">Prev</a></li>
+			{%endif%}
+			{%for n in noticias.paginator.page_range%}
+				<li><a href="{%url ver_noticias user.id, n%}">{{n}}</a></li>
+			{%endfor%}
+			{%if noticias.has_next%}
+				<li><a href="{%url ver_noticias user.id, noticias.next_page_number%}">Next</a></li>
+			{%endif%}
+		</ul>
+	</div>
+	<p class="text-info">Página {{noticias.number}} de {{noticias.paginator.num_pages}}</p>
+{%endblock%}

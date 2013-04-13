@@ -1,0 +1,42 @@
+{%extends 'base.html'%}
+{%block title%}NewsAjax | Acerca de{%endblock%}
+
+
+{%block sidebar%}
+
+{%for n in menu_noticias%}
+            <li ><a href="{%url ver_noticias_alone n.id%}">{{n.titulo}}</a></li>
+{%endfor%}
+         
+{%endblock %}
+
+{%block content%}
+	{%for n in noticia_muro%}
+		<p class="text-success">Titulo: {{n.titulo}}</p><br>
+		<p class="text-info">Contenido: {{n.contenido}}</p><br>
+		{%if n.photo%}
+				<img src="/media/{{ n.photo }}" width="400px" heigth="200px"/>
+		{%else%}
+				<span class="alert alert-warning"><b>Esta Noticia no tiene foto :/</b> </span><br><br>
+		{%endif%}
+		<br><br>
+		<p class ="text-info"> Escrita por:<a href="{%url perfil n.user.id%}"> {{n.user}}</a></p>
+	{%endfor%}
+{%endblock%}
+
+
+
+
+{%block js%}
+ <script type="text/javascript">
+    $(document).on('ready',function(){
+    	var refresh= setInterval(function() {
+        $('.container-fluid').load(top.location.href);
+         $('.span9').load(top.location.href);
+      },20000)  
+    });
+  </script>
+{%endblock%}
+
+
+

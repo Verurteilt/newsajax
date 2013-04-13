@@ -1,0 +1,64 @@
+{%extends 'index.html'%}
+{%block titulo%}Noticias Ajax | Agregar Noticia{%endblock%}
+{% block js %}
+	<script type="text/javascript"> 		
+		$('#formulario').bind('submit', function(e){
+			e.preventDefault();
+			var accion = $('#formulario').find('input[type=submit]').val();
+			var url = '/add_notice_ajax/';
+
+			var fd = new FormData($('#formulario').get(0));
+			$.ajax({
+				url: url,
+				data: fd,
+				type: 'POST',
+				success: function(data){
+
+					if (data.info_enviado){
+						$("#resultados").html('<span class="alert alert-success">Enviado Exitosamente</span>');
+						humane.log("Enviado Exitosamente");
+						setTimeout(function() {top.location='/ver_noticias/'+data.usuario_id+"/page/1";}, 1400);  
+						if (accion == 'Enviar'){
+							$('#formulario').get(0).reset();
+
+						}
+					} else {
+						$('#resultados').html('');
+						if (data.errores.titulo){
+							$('<span class="alert alert-error"><b>Titulo</b> '+data.errores.titulo+'</span>').appendTo('#resultados');
+						}
+						if (data.errores.contenido){
+							$('<span class="alert alert-error"><b>Contenido</b> '+data.errores.contenido+'</span>').appendTo('#resultados');
+						}
+						if (data.errores.photo){
+							$('<span class="alert alert-error"><b>Photo</b> '+data.errores.photo+'</span>').appendTo('#resultados');
+						}
+					
+					}
+				}, 
+				processData: false,
+				contentType: false
+			});
+		});
+	</script>
+{% endblock js %}
+
+
+{% block content %}
+{%if user.is_authenticated%}
+<form method="post" id="formulario" enctype="multipart/form-data">{% csrf_token %}
+	{{ formulario.as_p }}
+	<input type="submit" value="Enviar" class="btn btn-primary">
+</form>
+<div id="resultados"></div>
+{%else%}
+<span class="alert alert-error"><b>Debes Estar Logeado</b></span><br><br>
+<a href="{%url login%}"><input type="submit" value="Login" class="btn btn-primary"></a><br><br>
+<span class="alert alert-success"><b> o Registrate!</b></span><br><br>
+<a href="{%url registro%}"><input type="submit" value="Registrate" class="btn btn-primary"></a>
+
+
+{%endif%}
+
+{% endblock content %}
+

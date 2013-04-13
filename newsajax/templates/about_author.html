@@ -1,0 +1,16 @@
+{%extends 'index.html'%}
+{%block title%}Noticias Ajax | Acerca de Victor{%endblock%}
+
+{%block sidebar%}
+
+{%for n in menu_noticias%}
+            <li ><a href="{%url ver_noticias_alone n.id%}">{{n.titulo}}</a></li>
+{%endfor%}
+         
+{%endblock %}
+
+{%block content%}
+<h3>Hola! Soy Victor</h3>
+<p>Hola soy tutor de Hackero.net,miembro del CLUN(Comunidad Linux UNAM),Aprendiz,programador en Ruby(Ruby on Rails),Python(Django,pyGTK,wxPython),C,JavaScript, de igual manera se HTML,CSS  espero ser de su agrado gracias :D</p>
+{%endblock%}
+

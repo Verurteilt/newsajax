@@ -1,0 +1,19 @@
+{%extends 'index.html' %}
+
+
+{%block title%}NewsAjax | Noticia {{n.titulo}}{%endblock%}
+
+{%block content%}
+	{%for n in noticia%}
+		<p class="text-success">Titulo: {{n.titulo}}</p><br>
+		<p class="text-info">Contenido: {{n.contenido}}</p><br>
+		{%if n.photo%}
+				<img src="/media/{{ n.photo }}" width="400px" heigth="200px"/>
+		{%else%}
+				<span class="alert alert-warning"><b>Esta Noticia no tiene foto :/</b> </span><br><br>
+		{%endif%}
+		<br><br>
+		<p class ="text-info"> Escrita por:<a href="{%url perfil n.user.id%}"> {{n.user}}</a></p>
+	{%endfor%}
+{%endblock%}
+

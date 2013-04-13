@@ -1,0 +1,21 @@
+{%extends 'index.html'%}
+{%block title%}NewsAjax | Mi Perfil {{usuario.username}}{%endblock%}
+
+
+
+{%block content%}
+	<blockquote class="text-info">Perfil de: {{usuario.username}}</blockquote>
+		{% if usuario.get_profile.photo%}
+				<img src="/media/{{ usuario.get_profile.photo }}" width="200px" heigth="100px"/>
+		{%else%}
+				<span class="alert alert-warning"><b>Este usuario no tiene foto :/</b> </span><br><br>
+		{%endif%}
+				<blockquote class="text-info">Email: {{usuario.email}}</blockquote>
+				<blockquote class="text-info">Edad: {{usuario.get_profile.edad}} años</blockquote>
+				<blockquote class="text-info">Dedicación: {{usuario.get_profile.dedicacion}} </blockquote>
+		{%if user == usuario%}
+	                			<a href="{%url editar user.id%}">
+								<input type="submit" value="Editar" class="btn btn-primary"></a>
+		{%endif%}
+
+{%endblock%}

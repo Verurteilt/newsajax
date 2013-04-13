@@ -1,0 +1,71 @@
+{%extends 'index.html'%}
+{%block titulo%}Noticias Ajax | Registro{%endblock%}
+
+{%block sidebar%}
+
+{%for n in menu_noticias%}
+            <li ><a href="{%url ver_noticias_alone n.id%}">{{n.titulo}}</a></li>
+{%endfor%}
+         
+{%endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+	
+		$('#formulario').bind('submit', function(e){
+			e.preventDefault();
+			var accion = $('#formulario').find('input[type=submit]').val();
+			var url = '/registro_ajax/';
+
+			var fd = new FormData($('#formulario').get(0));
+			$.ajax({
+				url: url,
+				data: fd,
+				type: 'POST',
+				success: function(data){
+					if (data.exito == false){
+						$("#resultados").html('');
+						if (accion == 'Registro'){
+							$('#formulario').get(0).reset();
+						}
+						if (data.errores.username){
+							$('<span class="alert alert-error"><b>User</b> '+data.errores.username+'</span><br><br>').appendTo('#resultados');
+						}
+						if (data.errores.email){
+							$('<span class="alert alert-error"><b>Email</b> '+data.errores.email+'</span><br><br>').appendTo('#resultados');
+						}
+						if (data.errores.password){
+							$('<span class="alert alert-error"><b>Password</b> '+data.errores.password+'</span><br><br>').appendTo('#resultados');
+						}
+						if (data.errores.password2){
+							$('<span class="alert alert-error"><b>Password2</b> '+data.errores.password2+'</span><br><br>').appendTo('#resultados');
+						}
+						if(data.password !== data.password2){
+							$("#resultados").html('<span class="alert alert-error"><b> Las Password no coinciden </b></span>');
+						}
+					}else{
+						humane.log("Registro Exitoso");
+						$("#resultados").html('<span class="alert alert-success"><b> Usuario creado Correctamente </b></span>');
+						
+					} 
+
+				}, 
+				processData: false,
+				contentType: false
+			});
+		});
+	</script>
+{% endblock js %}
+
+
+{% block content %}
+{%if  not user.is_authenticated%}
+<form method="post" id="formulario" enctype="multipart/form-data">{% csrf_token %}
+	{{ formulario.as_p }}
+	<input type="submit" value="Registro" class="btn btn-primary">
+</form>
+<div id="resultados"></div>
+{%else%}
+<span class="alert alert-warning"><b>Ya estas Logeado </b> </span>
+{%endif%}
+{% endblock content %}

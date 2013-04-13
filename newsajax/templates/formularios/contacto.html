@@ -1,0 +1,88 @@
+{%extends 'index.html'%}
+{%block titulo%}Noticias Ajax | Contacto{%endblock%}
+
+{%block sidebar%}
+
+{%for n in menu_noticias%}
+            <li ><a href="{%url ver_noticias_alone n.id%}">{{n.titulo}}</a></li>
+{%endfor%}
+         
+{%endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		$('#formulario').bind('submit', function(e){
+			e.preventDefault();
+			var accion = $('#formulario').find('input[type=submit]').val();
+			var url = '/contacto_ajax/';
+
+			var fd = new FormData($('#formulario').get(0));
+			$.ajax({
+				beforeSend: function(){
+					$('#resultados').empty();
+					$('#envio').hide('slow');
+					var spinner = new Spinner({
+	  				lines: 10, // The number of lines to draw
+  					length: 6, // The length of each line
+  					width: 4, // The line thickness
+  					radius: 5, // The radius of the inner circle
+  					color: 'black', // #rbg or #rrggbb
+  					speed: 1, // Rounds per second
+  					trail: 100, // Afterglow percentage
+  					top:'auto',
+  					left:'30%'
+  					}).spin(document.getElementById("resultados"));
+				},
+				url: url,
+				data: fd,
+				type: 'POST',
+				success: function(data){
+					if (data.info_enviado){
+						$("#resultados").html('<span class="alert alert-success">Enviado Exitosamente</span>');
+						$('#envio').show('slow');
+						humane.log("Enviado Exitosamente");
+						if (accion == 'Enviar'){
+							$('#formulario').get(0).reset();
+
+						}
+					} else {
+						$('#resultados').html('');
+						$('#envio').show('slow');
+						if (data.errores.email){
+							$('<span class="alert alert-error"><b>Email</b> '+data.errores.email+'</span>').appendTo('#resultados');
+						}
+						if (data.errores.titulo){
+							$('<span class="alert alert-error"><b>Titulo</b> '+data.errores.titulo+'</span>').appendTo('#resultados');
+						}
+						if (data.errores.texto){
+							$('<span class="alert alert-error"><b>Texto</b> '+data.errores.texto+'</span>').appendTo('#resultados');
+						}
+					
+					}
+				}, 
+				processData: false,
+				contentType: false,
+			});
+		});
+	</script>
+{% endblock js %}
+
+
+{% block content %}
+{%if user.is_authenticated%}
+<form method="post" id="formulario" enctype="multipart/form-data">{% csrf_token %}
+	{{ formulario.as_p }}
+	<input type="submit" value="Enviar" class="btn btn-primary" id="envio">
+</form>
+<div id="resultados"></div>
+{%else%}
+<span class="alert alert-error"><b>Debes Estar Logeado</b></span><br><br>
+<a href="{%url login%}"><input type="submit" value="Login" class="btn btn-primary"></a><br><br>
+<span class="alert alert-success"><b> o Registrate!</b></span><br><br>
+<a href="{%url registro%}"><input type="submit" value="Registrate" class="btn btn-primary"></a>
+
+
+{%endif%}
+
+{% endblock content %}
+

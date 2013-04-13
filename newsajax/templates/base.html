@@ -1,0 +1,87 @@
+<html>
+<head>
+	<title>{%block title%}Noticias Ajax | Index{%endblock%}</title>
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap-responsive.css">
+  <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/libnotify.css">
+</head>
+<body >
+	{%block navi%}
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="{%url home %}">Hotel Tux</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="{%url home%}"> Home</a></li>
+              <li><a href="{%url about%}">About</a></li>
+              <li><a href="{%url about_author%}">About Victor</a></li>
+              <li><a href="{%url contacto%}">Contact</a></li>
+              {%if user.is_authenticated%}
+                <li><a href="{%url logout%}">Logout</a></li>
+                <li><a href="{%url perfil user.id%}">Mi Perfil</a></li>
+                <li><a href="{%url ver_noticias user.id,1%}">Ver mis noticias</a></li>
+              {%else%}
+               <li><a href="{%url login%}">Login</a></li>
+              <li><a href="{%url registro%}">Register</a></li>
+              {%endif%}
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    
+      <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Sidebar</li>
+              <li class="active"><a>Ultimas 10 noticias</a></li>
+              {%block sidebar%}
+              {%endblock%}
+              </ul>
+          </div><!--/.well -->
+      </div><!--/span-->
+
+    {%endblock%}
+    <div class="span9">
+      <div class="hero-unit">
+        {%block content%}
+        {%endblock%}
+    </div>
+   </div>
+    
+    
+   {%block footer%}
+   <footer class="navbar navbar-fixed-bottom">
+    <div class="navbar-inner">
+      <div class="container">
+        <ul class="nav visible-desktop">
+          <li><p class="muted credit">Creditos a <a href="http://www.facebook.com/MINImetalhead">Victor Manuel Castillo<a></p></li> 
+        </ul>
+      </div>
+    </div>
+  </footer>
+   {%endblock%}
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="{{STATIC_URL}}js/bootstrap.js"></script>
+  <script src="{{STATIC_URL}}js/humane.min.js"></script>
+  <script src="{{STATIC_URL}}js/spin.min.js"></script>
+  <script type="text/javascript" src="https://raw.github.com/carhartl/jquery-cookie/master/jquery.cookie.js"></script>
+  <script type="text/javascript">
+    $.ajaxSetup({
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('X-CSRFToken', $.cookie('csrftoken'));
+       }
+      });
+  </script>
+  
+
+{%block js%}
+{%endblock%}
