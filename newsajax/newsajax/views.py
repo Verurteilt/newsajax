@@ -15,8 +15,7 @@ from newsajax.newsajax.models import Noticias
 
 def index(request):
     menu_noticias = Noticias.objects.filter()[0:10]
-    x = len(Noticias.objects.all())
-    noticia_muro = Noticias.objects.filter(id=x)
+    noticia_muro = Noticias.objects.order_by('-pk')[0:1]
     return render_to_response('index.html', {'menu_noticias': menu_noticias, 'noticia_muro': noticia_muro}, context_instance=RequestContext(request))
 
 
